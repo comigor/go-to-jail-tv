@@ -233,7 +233,7 @@
 
       let avatarHtml;
       if (config.avatar) {
-        avatarHtml = `<img class="avatar" src="${config.avatar}" alt="${config.user}" crossorigin="anonymous">`;
+        avatarHtml = `<img class="avatar" src="${config.avatar}" alt="${config.user}" referrerpolicy="no-referrer">`;
       } else {
         avatarHtml = `<div class="avatar-placeholder">?</div>`;
       }
