@@ -62,3 +62,6 @@ if [[ -n "$AVATAR" ]]; then
 fi
 
 echo "$URL"
+
+# Push to TV
+cosmo tv set pi-01:0 "$URL"
