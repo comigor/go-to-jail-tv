@@ -32,7 +32,7 @@
       overflow: hidden;
     }
 
-    /* Flashing red/blue police lights */
+    /* Vignette */
     body::before {
       content: '';
       position: fixed;
@@ -42,15 +42,45 @@
       height: 100%;
       pointer-events: none;
       z-index: 100;
-      animation: police-lights 2s infinite;
-      opacity: 0.06;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
     }
 
-    @keyframes police-lights {
-      0%, 100% { background: transparent; }
-      10%, 30% { background: #ff0000; }
-      40%, 60% { background: transparent; }
-      70%, 90% { background: #0044ff; }
+    /* Rotating police spotlights */
+    .spotlight {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    .spotlight--red {
+      background: #ff0000;
+      animation: sweep-red 6s ease-in-out infinite;
+    }
+
+    .spotlight--blue {
+      background: #0044ff;
+      animation: sweep-blue 6s ease-in-out infinite;
+    }
+
+    @keyframes sweep-red {
+      0%   { top: -10%; left: -10%; }
+      25%  { top: -10%; left: 80%; }
+      50%  { top: 70%;  left: 80%; }
+      75%  { top: 70%;  left: -10%; }
+      100% { top: -10%; left: -10%; }
+    }
+
+    @keyframes sweep-blue {
+      0%   { top: 70%;  left: 80%; }
+      25%  { top: 70%;  left: -10%; }
+      50%  { top: -10%; left: -10%; }
+      75%  { top: -10%; left: 80%; }
+      100% { top: 70%;  left: 80%; }
     }
 
     .container {
@@ -93,15 +123,13 @@
       display: block;
     }
 
-    .mugshot-frame .jail-bars {
+    .mugshot-frame canvas {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
       z-index: 2;
-      mix-blend-mode: multiply;
     }
 
     .mugshot-frame .avatar-placeholder {
@@ -134,11 +162,11 @@
     }
 
     .reason::before {
-      content: '"';
+      content: '\201C';
     }
 
     .reason::after {
-      content: '"';
+      content: '\201D';
     }
 
     .verdict {
@@ -196,6 +224,8 @@
 </head>
 <body>
   <div class="container" id="app"></div>
+  <div class="spotlight spotlight--red"></div>
+  <div class="spotlight spotlight--blue"></div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -216,6 +246,151 @@
           </p>
         </div>
       `;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ── Jail bars canvas animation ──────────────────────────────
+    function animateJailBars(canvas) {
+      const SIZE = 600; // draw at 2x for retina sharpness
+      canvas.width = SIZE;
+      canvas.height = SIZE;
+      const ctx = canvas.getContext('2d');
+
+      const BAR_COUNT = 7;
+      const BAR_WIDTH = 14;
+      const CROSSBAR_H = 10;
+      const DURATION = 1200;     // ms for the gate to close
+      const DELAY = 400;         // ms before animation starts
+      const SHADOW_BLUR = 6;
+
+      // Spacing: bars evenly distributed across the width
+      const gap = SIZE / (BAR_COUNT + 1);
+
+      function drawBar(x, y, w, h) {
+        // Dark steel base
+        const grad = ctx.createLinearGradient(x, y, x + w, y);
+        grad.addColorStop(0, '#3a3a3a');
+        grad.addColorStop(0.2, '#6a6a6a');
+        grad.addColorStop(0.45, '#888');
+        grad.addColorStop(0.55, '#999');
+        grad.addColorStop(0.8, '#6a6a6a');
+        grad.addColorStop(1, '#3a3a3a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, y, w, h);
+
+        // Specular highlight
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.fillRect(x + w * 0.35, y, w * 0.15, h);
+      }
+
+      function drawCrossbar(y, h) {
+        const grad = ctx.createLinearGradient(0, y, 0, y + h);
+        grad.addColorStop(0, '#555');
+        grad.addColorStop(0.3, '#888');
+        grad.addColorStop(0.5, '#999');
+        grad.addColorStop(0.7, '#888');
+        grad.addColorStop(1, '#555');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y, SIZE, h);
+
+        // Specular
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.fillRect(0, y + h * 0.25, SIZE, h * 0.15);
+      }
+
+      function drawRivets(y) {
+        for (let i = 1; i <= BAR_COUNT; i++) {
+          const cx = gap * i;
+          const r = 4;
+
+          // Rivet body
+          const rGrad = ctx.createRadialGradient(cx - 1, y - 1, 0, cx, y, r);
+          rGrad.addColorStop(0, '#aaa');
+          rGrad.addColorStop(1, '#444');
+          ctx.beginPath();
+          ctx.arc(cx, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = rGrad;
+          ctx.fill();
+        }
+      }
+
+      function draw(progress) {
+        ctx.clearRect(0, 0, SIZE, SIZE);
+
+        // The bars slide down from above: offset goes from -SIZE to 0
+        const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        const offset = -SIZE * (1 - ease);
+
+        ctx.save();
+        ctx.translate(0, offset);
+
+        // Drop shadow behind the whole gate
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = SHADOW_BLUR;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+
+        // Vertical bars
+        for (let i = 1; i <= BAR_COUNT; i++) {
+          const x = gap * i - BAR_WIDTH / 2;
+          drawBar(x, 0, BAR_WIDTH, SIZE);
+        }
+
+        // Turn off shadow for crossbars (they overlap bars)
+        ctx.shadowColor = 'transparent';
+
+        // Top crossbar
+        drawCrossbar(12, CROSSBAR_H);
+        // Bottom crossbar
+        drawCrossbar(SIZE - 12 - CROSSBAR_H, CROSSBAR_H);
+        // Middle crossbar
+        drawCrossbar(SIZE / 2 - CROSSBAR_H / 2, CROSSBAR_H);
+
+        // Rivets at crossbar intersections
+        drawRivets(12 + CROSSBAR_H / 2);
+        drawRivets(SIZE - 12 - CROSSBAR_H / 2);
+        drawRivets(SIZE / 2);
+
+        ctx.restore();
+      }
+
+      // Animation loop
+      const REPEAT_INTERVAL = 30000; // replay every 30s
+
+      function runAnimation() {
+        let start = null;
+        canvas.style.animation = '';
+        ctx.clearRect(0, 0, SIZE, SIZE);
+
+        function frame(ts) {
+          if (!start) start = ts;
+          const elapsed = ts - start;
+
+          if (elapsed < DELAY) {
+            requestAnimationFrame(frame);
+            return;
+          }
+
+          const t = Math.min((elapsed - DELAY) / DURATION, 1);
+          draw(t);
+
+          if (t < 1) {
+            requestAnimationFrame(frame);
+          } else {
+            canvas.style.animation = 'slam 0.15s ease-out';
+            setTimeout(runAnimation, REPEAT_INTERVAL);
+          }
+        }
+
+        requestAnimationFrame(frame);
+      }
+
+      runAnimation();
     }
 
     function render() {
@@ -247,21 +422,32 @@
 
       app.innerHTML = `
         <div class="title">Go To Jail</div>
-        <div class="mugshot-frame">
+        <div class="mugshot-frame" id="mugshot">
           ${avatarHtml}
-          <img class="jail-bars" src="jail-cell-prison.gif" alt="jail bars">
+          <canvas id="jail-canvas"></canvas>
         </div>
         <div class="handle">@${escapeHtml(config.user)}</div>
         ${reasonHtml}
         <div class="verdict">Guilty</div>
       `;
+
+      // Start canvas animation
+      const canvas = document.getElementById('jail-canvas');
+      if (canvas) {
+        animateJailBars(canvas);
+      }
     }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
+    // Slam keyframe (added dynamically to avoid polluting CSS for no-JS)
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slam {
+        0% { transform: translateY(-3px); }
+        50% { transform: translateY(2px); }
+        100% { transform: translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
 
     render();
   </script>
