@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GO TO HEAVEN</title>
+    <meta property="og:title" content="GO TO HEAVEN" />
+    <meta property="og:type" content="website" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --color-primary: #ffffff;
+        --color-accent: #ffd700;
+        --color-bg: #0a0a14;
+        --color-news-gold: #b8860b;
+        --font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background-color: var(--color-bg);
+        color: var(--color-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      /* Vignette — golden tint */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(255, 215, 0, 0.08) 0%,
+          transparent 40%,
+          rgba(0, 0, 0, 0.6) 100%
+        );
+      }
+
+      /* Glowing golden orbs */
+      .spotlight {
+        position: fixed;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.3;
+        pointer-events: none;
+        z-index: 99;
+      }
+
+      .spotlight--gold {
+        background: #ffd700;
+        animation: sweep-gold 8s ease-in-out infinite;
+      }
+
+      .spotlight--white {
+        background: #fff8dc;
+        animation: sweep-white 8s ease-in-out infinite;
+      }
+
+      @keyframes sweep-gold {
+        0% {
+          top: -10%;
+          left: -10%;
+        }
+        25% {
+          top: -10%;
+          left: 80%;
+        }
+        50% {
+          top: 70%;
+          left: 80%;
+        }
+        75% {
+          top: 70%;
+          left: -10%;
+        }
+        100% {
+          top: -10%;
+          left: -10%;
+        }
+      }
+
+      @keyframes sweep-white {
+        0% {
+          top: 70%;
+          left: 80%;
+        }
+        25% {
+          top: 70%;
+          left: -10%;
+        }
+        50% {
+          top: -10%;
+          left: -10%;
+        }
+        75% {
+          top: -10%;
+          left: 80%;
+        }
+        100% {
+          top: 70%;
+          left: 80%;
+        }
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-content: center;
+        align-items: stretch;
+        width: 100%;
+        height: calc(100vh - 5vh); /* reserve space for ticker */
+        padding: 3vh 5vw 2vh;
+        z-index: 1;
+        box-sizing: border-box;
+      }
+
+      .col-left {
+        display: flex;
+        justify-content: center;
+      }
+
+      .col-right {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5vh;
+        padding-left: 3vw;
+        padding-right: 2vw;
+        overflow: hidden;
+      }
+
+      /* GOOD NEWS header */
+      .breaking-news-banner {
+        background: var(--color-news-gold);
+        color: #fff;
+        font-size: clamp(0.7rem, 1.4vw, 1.5rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        padding: 0.6vh 1.5vw;
+        display: inline-block;
+        line-height: 1;
+        animation: banner-glow 2s ease-in-out infinite;
+      }
+
+      @keyframes banner-glow {
+        0%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+        50% {
+          opacity: 0.85;
+          box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+      }
+
+      .title {
+        font-size: clamp(2rem, 5vw, 6rem);
+        font-weight: 900;
+        color: var(--color-accent);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        line-height: 1;
+        margin-top: 1.2vh;
+        text-shadow:
+          0 0 20px rgba(255, 215, 0, 0.5),
+          0 0 40px rgba(255, 215, 0, 0.3);
+        animation: title-pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes title-pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      /* LIVE badge */
+      .live-badge {
+        position: fixed;
+        top: 3vh;
+        right: 3vw;
+        display: flex;
+        align-items: center;
+        gap: 0.6vw;
+        z-index: 102;
+        font-family: var(--font-family);
+      }
+
+      .live-dot {
+        width: 14px;
+        height: 14px;
+        background: #ffd700;
+        border-radius: 50%;
+        animation: live-pulse 1.2s ease-in-out infinite;
+        box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+      }
+
+      @keyframes live-pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.3;
+          transform: scale(0.8);
+        }
+      }
+
+      .live-text {
+        font-size: 1.5vw;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 0.15em;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+      }
+
+      /* News ticker */
+      .news-ticker {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 5vh;
+        background: var(--color-news-gold);
+        z-index: 101;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+      }
+
+      .news-ticker-content {
+        display: inline-block;
+        white-space: nowrap;
+        font-size: 2vh;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0.03em;
+        animation: ticker-scroll 28s linear infinite;
+        padding-left: 100%;
+      }
+
+      @keyframes ticker-scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      /* Golden glow bars */
+      .glow-bar {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        z-index: 101;
+        pointer-events: none;
+      }
+
+      .glow-bar--top {
+        top: 0;
+      }
+      .glow-bar--bottom {
+        bottom: 5vh;
+      }
+
+      .glow-bar::before,
+      .glow-bar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 50%;
+        height: 100%;
+      }
+
+      .glow-bar::before {
+        left: 0;
+        animation: glow-left 2s ease-in-out infinite;
+      }
+
+      .glow-bar::after {
+        right: 0;
+        animation: glow-right 2s ease-in-out infinite;
+      }
+
+      @keyframes glow-left {
+        0%,
+        100% {
+          background: #ffd700;
+        }
+        50% {
+          background: #fff8dc;
+        }
+      }
+
+      @keyframes glow-right {
+        0%,
+        100% {
+          background: #fff8dc;
+        }
+        50% {
+          background: #ffd700;
+        }
+      }
+
+      /* Blessing number */
+      .blessing-number {
+        font-family: "Courier New", Courier, monospace;
+        font-size: clamp(0.7rem, 1.4vw, 1.5rem);
+        color: #b8860b;
+        letter-spacing: 0.1em;
+      }
+
+      .mugshot-frame {
+        position: relative;
+        height: min(70vh, 44vw);
+        aspect-ratio: 1;
+        border: 4px solid #b8860b;
+        background: #12121e;
+        box-shadow:
+          0 0 30px rgba(255, 215, 0, 0.15),
+          0 0 60px rgba(255, 215, 0, 0.05),
+          inset 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .mugshot-frame .avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .mugshot-frame canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+      }
+
+      .mugshot-frame .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10vh;
+        background: #16162a;
+        color: #b8860b;
+      }
+
+      .handle {
+        font-size: clamp(1.2rem, 3vw, 3.5rem);
+        font-weight: 700;
+        color: var(--color-primary);
+      }
+
+      .reason {
+        font-size: clamp(1.5rem, 4vw, 5rem);
+        color: #ccc;
+        line-height: 1.2;
+        margin-top: auto;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+      }
+
+      .reason::before {
+        content: "\201C";
+      }
+
+      .reason::after {
+        content: "\201D";
+      }
+
+      .verdict {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        font-family: "Courier New", Courier, monospace;
+        font-size: clamp(1rem, 2.5vw, 3rem);
+        font-weight: 900;
+        color: #0a0a14;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        text-align: center;
+        padding: 1.5vh 0;
+        background: var(--color-accent);
+        z-index: 3;
+      }
+
+      .error-state {
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .error-state h1 {
+        color: var(--color-accent);
+        margin-bottom: 1rem;
+      }
+
+      .error-state p {
+        color: #888;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .error-state code {
+        background: #16162a;
+        padding: 0.2em 0.5em;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        color: #ccc;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+          height: auto;
+          min-height: 100vh;
+          padding: 3vh 5vw;
+        }
+
+        .col-right {
+          align-items: center;
+          text-align: center;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        .mugshot-frame {
+          height: auto;
+          width: 70vw;
+        }
+
+        .title {
+          font-size: 10vw;
+        }
+
+        .handle {
+          font-size: 6vw;
+        }
+
+        .reason {
+          font-size: 8vw;
+        }
+
+        .verdict {
+          font-size: 6vw;
+        }
+
+        .blessing-number {
+          font-size: 3vw;
+        }
+
+        .live-text {
+          font-size: 3vw;
+        }
+
+        .breaking-news-banner {
+          font-size: 2.5vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span class="live-text">LIVE</span>
+    </div>
+    <div class="glow-bar glow-bar--top"></div>
+    <div class="glow-bar glow-bar--bottom"></div>
+    <div class="news-ticker" id="news-ticker">
+      <span class="news-ticker-content" id="ticker-text"></span>
+    </div>
+    <div class="container" id="app"></div>
+    <div class="spotlight spotlight--gold"></div>
+    <div class="spotlight spotlight--white"></div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+
+      const config = {
+        user: params.get("user"),
+        message: params.get("message"),
+        avatar: params.get("avatar"),
+      };
+
+      function showError() {
+        document.getElementById("app").innerHTML = `
+        <div class="error-state">
+          <h1>No one to bless... yet</h1>
+          <p>
+            Use the CLI to send someone to heaven:<br><br>
+            <code>cosmo inutils go-to-heaven &lt;slack_handle&gt; "reason"</code>
+          </p>
+        </div>
+      `;
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // ── Golden halo canvas animation ──────────────────────────────
+      function animateHalo(canvas) {
+        const SIZE = 600;
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+        const ctx = canvas.getContext("2d");
+
+        const DURATION = 1400;
+        const DELAY = 300;
+        const RAY_COUNT = 10;
+        const REPEAT_INTERVAL = 30000;
+
+        function drawHaloRing(progress, rotation) {
+          const cx = SIZE / 2;
+          const cy = SIZE / 2;
+          const maxRadius = SIZE * 0.38;
+          const ringWidth = SIZE * 0.06;
+
+          // Halo descends from above and settles
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const yOffset = -SIZE * 0.5 * (1 - ease);
+
+          ctx.save();
+          ctx.translate(0, yOffset);
+
+          // Outer glow
+          const glowGrad = ctx.createRadialGradient(
+            cx,
+            cy,
+            maxRadius - ringWidth * 2,
+            cx,
+            cy,
+            maxRadius + ringWidth * 2,
+          );
+          glowGrad.addColorStop(0, "rgba(255, 215, 0, 0)");
+          glowGrad.addColorStop(0.3, "rgba(255, 215, 0, 0.15)");
+          glowGrad.addColorStop(0.6, "rgba(255, 215, 0, 0.08)");
+          glowGrad.addColorStop(1, "rgba(255, 215, 0, 0)");
+          ctx.fillStyle = glowGrad;
+          ctx.fillRect(0, 0, SIZE, SIZE);
+
+          // Ring itself
+          ctx.beginPath();
+          ctx.arc(cx, cy, maxRadius, 0, Math.PI * 2);
+          ctx.arc(cx, cy, maxRadius - ringWidth, 0, Math.PI * 2, true);
+          ctx.closePath();
+
+          const ringGrad = ctx.createRadialGradient(
+            cx,
+            cy,
+            maxRadius - ringWidth,
+            cx,
+            cy,
+            maxRadius,
+          );
+          ringGrad.addColorStop(0, "#DAA520");
+          ringGrad.addColorStop(0.3, "#FFD700");
+          ringGrad.addColorStop(0.6, "#FFA500");
+          ringGrad.addColorStop(1, "#DAA520");
+          ctx.fillStyle = ringGrad;
+          ctx.shadowColor = "rgba(255, 215, 0, 0.6)";
+          ctx.shadowBlur = 20;
+          ctx.fill();
+
+          // Inner highlight on ring
+          ctx.beginPath();
+          ctx.arc(cx, cy, maxRadius - 2, 0, Math.PI * 2);
+          ctx.arc(cx, cy, maxRadius - ringWidth * 0.4, 0, Math.PI * 2, true);
+          ctx.closePath();
+          ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+          ctx.shadowColor = "transparent";
+          ctx.fill();
+
+          ctx.restore();
+        }
+
+        function drawRays(progress, rotation) {
+          const cx = SIZE / 2;
+          const cy = SIZE / 2;
+          const innerR = SIZE * 0.05;
+          const outerR = SIZE * 0.48;
+
+          // Rays fade in as animation progresses
+          const rayAlpha = Math.min(progress * 1.5, 1) * 0.2;
+
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(rotation);
+
+          for (let i = 0; i < RAY_COUNT; i++) {
+            const angle = (i / RAY_COUNT) * Math.PI * 2;
+            const halfWidth = (Math.PI / RAY_COUNT) * 0.35;
+
+            ctx.beginPath();
+            ctx.moveTo(Math.cos(angle) * innerR, Math.sin(angle) * innerR);
+            ctx.lineTo(
+              Math.cos(angle - halfWidth) * outerR,
+              Math.sin(angle - halfWidth) * outerR,
+            );
+            ctx.lineTo(
+              Math.cos(angle + halfWidth) * outerR,
+              Math.sin(angle + halfWidth) * outerR,
+            );
+            ctx.closePath();
+
+            const rayGrad = ctx.createRadialGradient(
+              0,
+              0,
+              innerR,
+              0,
+              0,
+              outerR,
+            );
+            rayGrad.addColorStop(
+              0,
+              "rgba(255, 215, 0, " + rayAlpha * 1.5 + ")",
+            );
+            rayGrad.addColorStop(
+              0.5,
+              "rgba(255, 215, 0, " + rayAlpha * 0.6 + ")",
+            );
+            rayGrad.addColorStop(1, "rgba(255, 215, 0, 0)");
+            ctx.fillStyle = rayGrad;
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+
+        function draw(progress, rotation) {
+          ctx.clearRect(0, 0, SIZE, SIZE);
+          drawRays(progress, rotation);
+          drawHaloRing(progress, rotation);
+        }
+
+        function runAnimation() {
+          let start = null;
+          let rayRotation = 0;
+          canvas.style.animation = "";
+          ctx.clearRect(0, 0, SIZE, SIZE);
+
+          function frame(ts) {
+            if (!start) start = ts;
+            const elapsed = ts - start;
+
+            if (elapsed < DELAY) {
+              requestAnimationFrame(frame);
+              return;
+            }
+
+            const t = Math.min((elapsed - DELAY) / DURATION, 1);
+            rayRotation = (elapsed / 8000) * Math.PI * 2;
+            draw(t, rayRotation);
+
+            if (t < 1) {
+              requestAnimationFrame(frame);
+            } else {
+              // Gentle settle bounce
+              canvas.style.animation = "settle 0.3s ease-out";
+              // Continue rotating rays after halo lands
+              function rotateRays(ts2) {
+                rayRotation = (ts2 / 8000) * Math.PI * 2;
+                draw(1, rayRotation);
+                requestAnimationFrame(rotateRays);
+              }
+              requestAnimationFrame(rotateRays);
+              setTimeout(runAnimation, REPEAT_INTERVAL);
+            }
+          }
+
+          requestAnimationFrame(frame);
+        }
+
+        runAnimation();
+      }
+
+      // ── Blessing number from date + username hash ──
+      function generateBlessingNumber(username) {
+        let hash = 0;
+        for (let i = 0; i < username.length; i++) {
+          hash = ((hash << 5) - hash + username.charCodeAt(i)) | 0;
+        }
+        const num = Math.abs(hash) % 10000;
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, "0");
+        const dd = String(now.getDate()).padStart(2, "0");
+        return `BLESSING #${yyyy}-${mm}-${dd}-${String(num).padStart(4, "0")}`;
+      }
+
+      // ── Ticker text generator ──
+      function generateTickerText(user, message) {
+        const u = escapeHtml(user);
+        const msg = message ? escapeHtml(message) : "outstanding contributions";
+        return [
+          `\u2728 BREAKING: @${u} recognized for "${msg}" \u2014 colleagues describe it as "truly inspirational"`,
+          `\u2728 Office morale has reached an all-time high`,
+          `\u2728 Colleagues urged to follow @${u}'s example immediately`,
+          `\u2728 @${u}'s keyboard has been upgraded as a reward`,
+          `\u2728 HR confirms this is the real deal`,
+          `\u2728 Witnesses report @${u} showed "incredible dedication"`,
+        ].join("    \u00B7    ");
+      }
+
+      function render() {
+        if (!config.user) {
+          showError();
+          return;
+        }
+
+        const app = document.getElementById("app");
+
+        // Dynamic OG tags
+        document.title = `${config.user} \u2014 GO TO HEAVEN`;
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) ogTitle.content = `${config.user} is going to HEAVEN`;
+
+        let avatarHtml;
+        if (config.avatar) {
+          const avatarUrl = new URL(config.avatar);
+          avatarUrl.searchParams.set("_", "1");
+          avatarHtml = `<img class="avatar" src="${avatarUrl.href}" alt="${config.user}" referrerpolicy="no-referrer">`;
+        } else {
+          avatarHtml = `<div class="avatar-placeholder">\u2606</div>`;
+        }
+
+        let reasonHtml = "";
+        if (config.message) {
+          reasonHtml = `<div class="reason">${escapeHtml(config.message)}</div>`;
+        }
+
+        // Static blessed verdict
+        const verdictText = "Blessed";
+
+        // Blessing number
+        const blessingNum = generateBlessingNumber(config.user);
+
+        app.innerHTML = `
+        <div class="col-left">
+          <div class="mugshot-frame" id="portrait">
+            ${avatarHtml}
+            <canvas id="halo-canvas"></canvas>
+            <div class="verdict">${verdictText}</div>
+          </div>
+        </div>
+        <div class="col-right">
+          <div class="breaking-news-banner">\u2726 Good News</div>
+          <div class="title">Go To Heaven</div>
+          <div class="handle">@${escapeHtml(config.user)}</div>
+          <div class="blessing-number">${blessingNum}</div>
+          ${reasonHtml}
+        </div>
+      `;
+
+        // Populate ticker
+        const tickerEl = document.getElementById("ticker-text");
+        if (tickerEl) {
+          tickerEl.textContent = generateTickerText(
+            config.user,
+            config.message,
+          );
+        }
+
+        // Start canvas animation
+        const canvas = document.getElementById("halo-canvas");
+        if (canvas) {
+          animateHalo(canvas);
+        }
+      }
+
+      // Settle keyframe (gentle bounce)
+      const style = document.createElement("style");
+      style.textContent = `
+      @keyframes settle {
+        0% { transform: translateY(-4px); }
+        40% { transform: translateY(2px); }
+        70% { transform: translateY(-1px); }
+        100% { transform: translateY(0); }
+      }
+    `;
+      document.head.appendChild(style);
+
+      render();
+    </script>
+  </body>
+</html>
