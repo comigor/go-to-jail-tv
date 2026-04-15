@@ -1,243 +1,328 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GO TO JAIL</title>
-  <meta property="og:title" content="GO TO JAIL">
-  <meta property="og:type" content="website">
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GO TO JAIL</title>
+    <meta property="og:title" content="GO TO JAIL" />
+    <meta property="og:type" content="website" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    :root {
-      --color-primary: #ffffff;
-      --color-accent: #ff3131;
-      --color-bg: #0a0a0a;
-      --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+      :root {
+        --color-primary: #ffffff;
+        --color-accent: #ff3131;
+        --color-bg: #0a0a0a;
+        --font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
 
-    body {
-      font-family: var(--font-family);
-      background-color: var(--color-bg);
-      color: var(--color-primary);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
+      body {
+        font-family: var(--font-family);
+        background-color: var(--color-bg);
+        color: var(--color-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
 
-    /* Vignette */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 100;
-      background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
-    }
+      /* Vignette */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.6) 100%
+        );
+      }
 
-    /* Rotating police spotlights */
-    .spotlight {
-      position: fixed;
-      width: 500px;
-      height: 500px;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.35;
-      pointer-events: none;
-      z-index: 99;
-    }
+      /* Rotating police spotlights */
+      .spotlight {
+        position: fixed;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.35;
+        pointer-events: none;
+        z-index: 99;
+      }
 
-    .spotlight--red {
-      background: #ff0000;
-      animation: sweep-red 6s ease-in-out infinite;
-    }
+      .spotlight--red {
+        background: #ff0000;
+        animation: sweep-red 6s ease-in-out infinite;
+      }
 
-    .spotlight--blue {
-      background: #0044ff;
-      animation: sweep-blue 6s ease-in-out infinite;
-    }
+      .spotlight--blue {
+        background: #0044ff;
+        animation: sweep-blue 6s ease-in-out infinite;
+      }
 
-    @keyframes sweep-red {
-      0%   { top: -10%; left: -10%; }
-      25%  { top: -10%; left: 80%; }
-      50%  { top: 70%;  left: 80%; }
-      75%  { top: 70%;  left: -10%; }
-      100% { top: -10%; left: -10%; }
-    }
+      @keyframes sweep-red {
+        0% {
+          top: -10%;
+          left: -10%;
+        }
+        25% {
+          top: -10%;
+          left: 80%;
+        }
+        50% {
+          top: 70%;
+          left: 80%;
+        }
+        75% {
+          top: 70%;
+          left: -10%;
+        }
+        100% {
+          top: -10%;
+          left: -10%;
+        }
+      }
 
-    @keyframes sweep-blue {
-      0%   { top: 70%;  left: 80%; }
-      25%  { top: 70%;  left: -10%; }
-      50%  { top: -10%; left: -10%; }
-      75%  { top: -10%; left: 80%; }
-      100% { top: 70%;  left: 80%; }
-    }
+      @keyframes sweep-blue {
+        0% {
+          top: 70%;
+          left: 80%;
+        }
+        25% {
+          top: 70%;
+          left: -10%;
+        }
+        50% {
+          top: -10%;
+          left: -10%;
+        }
+        75% {
+          top: -10%;
+          left: 80%;
+        }
+        100% {
+          top: 70%;
+          left: 80%;
+        }
+      }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 2rem;
-      z-index: 1;
-    }
+      .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-content: center;
+        align-items: stretch;
+        width: 100%;
+        height: 100vh;
+        padding: 5vh 5vw;
+        z-index: 1;
+        box-sizing: border-box;
+      }
 
-    .title {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: var(--color-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      text-shadow: 0 0 20px rgba(255, 49, 49, 0.5), 0 0 40px rgba(255, 49, 49, 0.3);
-      animation: title-pulse 2s ease-in-out infinite;
-    }
+      .col-left {
+        display: flex;
+        justify-content: center;
+      }
 
-    @keyframes title-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
-    }
+      .col-right {
+        display: flex;
+        flex-direction: column;
+        gap: 3vh;
+        padding-left: 3vw;
+        padding-right: 2vw;
+      }
 
-    .mugshot-frame {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      border: 4px solid #333;
-      background: #1a1a1a;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .mugshot-frame .avatar {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .mugshot-frame canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-    }
-
-    .mugshot-frame .avatar-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 6rem;
-      background: #222;
-      color: #555;
-    }
-
-    .handle {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--color-primary);
-    }
-
-    .reason {
-      font-size: 1.2rem;
-      color: #ccc;
-      max-width: 500px;
-      text-align: center;
-      line-height: 1.5;
-      padding: 1rem 1.5rem;
-      background: rgba(255, 49, 49, 0.08);
-      border: 1px solid rgba(255, 49, 49, 0.2);
-      border-radius: 8px;
-    }
-
-    .reason::before {
-      content: '\201C';
-    }
-
-    .reason::after {
-      content: '\201D';
-    }
-
-    .verdict {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--color-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.3em;
-      margin-top: 0.5rem;
-    }
-
-    .error-state {
-      text-align: center;
-      padding: 2rem;
-    }
-
-    .error-state h1 {
-      color: var(--color-accent);
-      margin-bottom: 1rem;
-    }
-
-    .error-state p {
-      color: #888;
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-
-    .error-state code {
-      background: #1a1a1a;
-      padding: 0.2em 0.5em;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      color: #ccc;
-    }
-
-    @media (max-width: 480px) {
       .title {
-        font-size: 1.8rem;
+        font-size: 5vw;
+        font-weight: 900;
+        color: var(--color-accent);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        line-height: 1;
+        text-shadow:
+          0 0 20px rgba(255, 49, 49, 0.5),
+          0 0 40px rgba(255, 49, 49, 0.3);
+        animation: title-pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes title-pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
+        }
       }
 
       .mugshot-frame {
-        width: 240px;
-        height: 240px;
+        position: relative;
+        height: 75vh;
+        max-width: 44vw;
+        aspect-ratio: 1;
+        border: 4px solid #333;
+        background: #1a1a1a;
+        box-shadow:
+          0 0 30px rgba(0, 0, 0, 0.8),
+          inset 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .mugshot-frame .avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .mugshot-frame canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+      }
+
+      .mugshot-frame .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10vh;
+        background: #222;
+        color: #555;
       }
 
       .handle {
-        font-size: 1.4rem;
+        font-size: 3vw;
+        font-weight: 700;
+        color: var(--color-primary);
       }
 
       .reason {
-        font-size: 1rem;
+        font-size: 5vw;
+        color: #ccc;
+        line-height: 1.2;
+        margin-top: auto;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="container" id="app"></div>
-  <div class="spotlight spotlight--red"></div>
-  <div class="spotlight spotlight--blue"></div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
+      .reason::before {
+        content: "\201C";
+      }
 
-    const config = {
-      user: params.get('user'),
-      message: params.get('message'),
-      avatar: params.get('avatar'),
-    };
+      .reason::after {
+        content: "\201D";
+      }
 
-    function showError() {
-      document.getElementById('app').innerHTML = `
+      .verdict {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        font-size: 2.5vw;
+        font-weight: 900;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        text-align: center;
+        padding: 1.5vh 0;
+        background: var(--color-accent);
+        z-index: 3;
+      }
+
+      .error-state {
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .error-state h1 {
+        color: var(--color-accent);
+        margin-bottom: 1rem;
+      }
+
+      .error-state p {
+        color: #888;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .error-state code {
+        background: #1a1a1a;
+        padding: 0.2em 0.5em;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        color: #ccc;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+          height: auto;
+          min-height: 100vh;
+          padding: 3vh 5vw;
+        }
+
+        .col-right {
+          align-items: center;
+          text-align: center;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        .mugshot-frame {
+          height: auto;
+          width: 70vw;
+        }
+
+        .title {
+          font-size: 10vw;
+        }
+
+        .handle {
+          font-size: 6vw;
+        }
+
+        .reason {
+          font-size: 8vw;
+        }
+
+        .verdict {
+          font-size: 6vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="app"></div>
+    <div class="spotlight spotlight--red"></div>
+    <div class="spotlight spotlight--blue"></div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+
+      const config = {
+        user: params.get("user"),
+        message: params.get("message"),
+        avatar: params.get("avatar"),
+      };
+
+      function showError() {
+        document.getElementById("app").innerHTML = `
         <div class="error-state">
           <h1>No one to jail... yet</h1>
           <p>
@@ -246,210 +331,214 @@
           </p>
         </div>
       `;
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // ── Jail bars canvas animation ──────────────────────────────
-    function animateJailBars(canvas) {
-      const SIZE = 600; // draw at 2x for retina sharpness
-      canvas.width = SIZE;
-      canvas.height = SIZE;
-      const ctx = canvas.getContext('2d');
-
-      const BAR_COUNT = 7;
-      const BAR_WIDTH = 14;
-      const CROSSBAR_H = 10;
-      const DURATION = 1200;     // ms for the gate to close
-      const DELAY = 400;         // ms before animation starts
-      const SHADOW_BLUR = 6;
-
-      // Spacing: bars evenly distributed across the width
-      const gap = SIZE / (BAR_COUNT + 1);
-
-      function drawBar(x, y, w, h) {
-        // Dark steel base
-        const grad = ctx.createLinearGradient(x, y, x + w, y);
-        grad.addColorStop(0, '#3a3a3a');
-        grad.addColorStop(0.2, '#6a6a6a');
-        grad.addColorStop(0.45, '#888');
-        grad.addColorStop(0.55, '#999');
-        grad.addColorStop(0.8, '#6a6a6a');
-        grad.addColorStop(1, '#3a3a3a');
-        ctx.fillStyle = grad;
-        ctx.fillRect(x, y, w, h);
-
-        // Specular highlight
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-        ctx.fillRect(x + w * 0.35, y, w * 0.15, h);
       }
 
-      function drawCrossbar(y, h) {
-        const grad = ctx.createLinearGradient(0, y, 0, y + h);
-        grad.addColorStop(0, '#555');
-        grad.addColorStop(0.3, '#888');
-        grad.addColorStop(0.5, '#999');
-        grad.addColorStop(0.7, '#888');
-        grad.addColorStop(1, '#555');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, y, SIZE, h);
-
-        // Specular
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.fillRect(0, y + h * 0.25, SIZE, h * 0.15);
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
       }
 
-      function drawRivets(y) {
-        for (let i = 1; i <= BAR_COUNT; i++) {
-          const cx = gap * i;
-          const r = 4;
+      // ── Jail bars canvas animation ──────────────────────────────
+      function animateJailBars(canvas) {
+        const SIZE = 600; // draw at 2x for retina sharpness
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+        const ctx = canvas.getContext("2d");
 
-          // Rivet body
-          const rGrad = ctx.createRadialGradient(cx - 1, y - 1, 0, cx, y, r);
-          rGrad.addColorStop(0, '#aaa');
-          rGrad.addColorStop(1, '#444');
-          ctx.beginPath();
-          ctx.arc(cx, y, r, 0, Math.PI * 2);
-          ctx.fillStyle = rGrad;
-          ctx.fill();
-        }
-      }
+        const BAR_COUNT = 7;
+        const BAR_WIDTH = 14;
+        const CROSSBAR_H = 10;
+        const DURATION = 1200; // ms for the gate to close
+        const DELAY = 400; // ms before animation starts
+        const SHADOW_BLUR = 6;
 
-      function draw(progress) {
-        ctx.clearRect(0, 0, SIZE, SIZE);
+        // Spacing: bars evenly distributed across the width
+        const gap = SIZE / (BAR_COUNT + 1);
 
-        // The bars slide down from above: offset goes from -SIZE to 0
-        const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-        const offset = -SIZE * (1 - ease);
+        function drawBar(x, y, w, h) {
+          // Dark steel base
+          const grad = ctx.createLinearGradient(x, y, x + w, y);
+          grad.addColorStop(0, "#3a3a3a");
+          grad.addColorStop(0.2, "#6a6a6a");
+          grad.addColorStop(0.45, "#888");
+          grad.addColorStop(0.55, "#999");
+          grad.addColorStop(0.8, "#6a6a6a");
+          grad.addColorStop(1, "#3a3a3a");
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, y, w, h);
 
-        ctx.save();
-        ctx.translate(0, offset);
-
-        // Drop shadow behind the whole gate
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-        ctx.shadowBlur = SHADOW_BLUR;
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 2;
-
-        // Vertical bars
-        for (let i = 1; i <= BAR_COUNT; i++) {
-          const x = gap * i - BAR_WIDTH / 2;
-          drawBar(x, 0, BAR_WIDTH, SIZE);
+          // Specular highlight
+          ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+          ctx.fillRect(x + w * 0.35, y, w * 0.15, h);
         }
 
-        // Turn off shadow for crossbars (they overlap bars)
-        ctx.shadowColor = 'transparent';
+        function drawCrossbar(y, h) {
+          const grad = ctx.createLinearGradient(0, y, 0, y + h);
+          grad.addColorStop(0, "#555");
+          grad.addColorStop(0.3, "#888");
+          grad.addColorStop(0.5, "#999");
+          grad.addColorStop(0.7, "#888");
+          grad.addColorStop(1, "#555");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, y, SIZE, h);
 
-        // Top crossbar
-        drawCrossbar(12, CROSSBAR_H);
-        // Bottom crossbar
-        drawCrossbar(SIZE - 12 - CROSSBAR_H, CROSSBAR_H);
-        // Middle crossbar
-        drawCrossbar(SIZE / 2 - CROSSBAR_H / 2, CROSSBAR_H);
+          // Specular
+          ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
+          ctx.fillRect(0, y + h * 0.25, SIZE, h * 0.15);
+        }
 
-        // Rivets at crossbar intersections
-        drawRivets(12 + CROSSBAR_H / 2);
-        drawRivets(SIZE - 12 - CROSSBAR_H / 2);
-        drawRivets(SIZE / 2);
+        function drawRivets(y) {
+          for (let i = 1; i <= BAR_COUNT; i++) {
+            const cx = gap * i;
+            const r = 4;
 
-        ctx.restore();
-      }
-
-      // Animation loop
-      const REPEAT_INTERVAL = 30000; // replay every 30s
-
-      function runAnimation() {
-        let start = null;
-        canvas.style.animation = '';
-        ctx.clearRect(0, 0, SIZE, SIZE);
-
-        function frame(ts) {
-          if (!start) start = ts;
-          const elapsed = ts - start;
-
-          if (elapsed < DELAY) {
-            requestAnimationFrame(frame);
-            return;
-          }
-
-          const t = Math.min((elapsed - DELAY) / DURATION, 1);
-          draw(t);
-
-          if (t < 1) {
-            requestAnimationFrame(frame);
-          } else {
-            canvas.style.animation = 'slam 0.15s ease-out';
-            setTimeout(runAnimation, REPEAT_INTERVAL);
+            // Rivet body
+            const rGrad = ctx.createRadialGradient(cx - 1, y - 1, 0, cx, y, r);
+            rGrad.addColorStop(0, "#aaa");
+            rGrad.addColorStop(1, "#444");
+            ctx.beginPath();
+            ctx.arc(cx, y, r, 0, Math.PI * 2);
+            ctx.fillStyle = rGrad;
+            ctx.fill();
           }
         }
 
-        requestAnimationFrame(frame);
+        function draw(progress) {
+          ctx.clearRect(0, 0, SIZE, SIZE);
+
+          // The bars slide down from above: offset goes from -SIZE to 0
+          const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+          const offset = -SIZE * (1 - ease);
+
+          ctx.save();
+          ctx.translate(0, offset);
+
+          // Drop shadow behind the whole gate
+          ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+          ctx.shadowBlur = SHADOW_BLUR;
+          ctx.shadowOffsetX = 2;
+          ctx.shadowOffsetY = 2;
+
+          // Vertical bars
+          for (let i = 1; i <= BAR_COUNT; i++) {
+            const x = gap * i - BAR_WIDTH / 2;
+            drawBar(x, 0, BAR_WIDTH, SIZE);
+          }
+
+          // Turn off shadow for crossbars (they overlap bars)
+          ctx.shadowColor = "transparent";
+
+          // Top crossbar
+          drawCrossbar(12, CROSSBAR_H);
+          // Bottom crossbar
+          drawCrossbar(SIZE - 12 - CROSSBAR_H, CROSSBAR_H);
+          // Middle crossbar
+          drawCrossbar(SIZE / 2 - CROSSBAR_H / 2, CROSSBAR_H);
+
+          // Rivets at crossbar intersections
+          drawRivets(12 + CROSSBAR_H / 2);
+          drawRivets(SIZE - 12 - CROSSBAR_H / 2);
+          drawRivets(SIZE / 2);
+
+          ctx.restore();
+        }
+
+        // Animation loop
+        const REPEAT_INTERVAL = 30000; // replay every 30s
+
+        function runAnimation() {
+          let start = null;
+          canvas.style.animation = "";
+          ctx.clearRect(0, 0, SIZE, SIZE);
+
+          function frame(ts) {
+            if (!start) start = ts;
+            const elapsed = ts - start;
+
+            if (elapsed < DELAY) {
+              requestAnimationFrame(frame);
+              return;
+            }
+
+            const t = Math.min((elapsed - DELAY) / DURATION, 1);
+            draw(t);
+
+            if (t < 1) {
+              requestAnimationFrame(frame);
+            } else {
+              canvas.style.animation = "slam 0.15s ease-out";
+              setTimeout(runAnimation, REPEAT_INTERVAL);
+            }
+          }
+
+          requestAnimationFrame(frame);
+        }
+
+        runAnimation();
       }
 
-      runAnimation();
-    }
+      function render() {
+        if (!config.user) {
+          showError();
+          return;
+        }
 
-    function render() {
-      if (!config.user) {
-        showError();
-        return;
-      }
+        const app = document.getElementById("app");
 
-      const app = document.getElementById('app');
+        // Dynamic OG tags
+        document.title = `${config.user} — GO TO JAIL`;
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) ogTitle.content = `${config.user} must GO TO JAIL`;
 
-      // Dynamic OG tags
-      document.title = `${config.user} — GO TO JAIL`;
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) ogTitle.content = `${config.user} must GO TO JAIL`;
+        let avatarHtml;
+        if (config.avatar) {
+          const avatarUrl = new URL(config.avatar);
+          avatarUrl.searchParams.set("_", "1");
+          avatarHtml = `<img class="avatar" src="${avatarUrl.href}" alt="${config.user}" referrerpolicy="no-referrer">`;
+        } else {
+          avatarHtml = `<div class="avatar-placeholder">?</div>`;
+        }
 
-      let avatarHtml;
-      if (config.avatar) {
-        const avatarUrl = new URL(config.avatar);
-        avatarUrl.searchParams.set('_', '1');
-        avatarHtml = `<img class="avatar" src="${avatarUrl.href}" alt="${config.user}" referrerpolicy="no-referrer">`;
-      } else {
-        avatarHtml = `<div class="avatar-placeholder">?</div>`;
-      }
+        let reasonHtml = "";
+        if (config.message) {
+          reasonHtml = `<div class="reason">${escapeHtml(config.message)}</div>`;
+        }
 
-      let reasonHtml = '';
-      if (config.message) {
-        reasonHtml = `<div class="reason">${escapeHtml(config.message)}</div>`;
-      }
-
-      app.innerHTML = `
-        <div class="title">Go To Jail</div>
-        <div class="mugshot-frame" id="mugshot">
-          ${avatarHtml}
-          <canvas id="jail-canvas"></canvas>
+        app.innerHTML = `
+        <div class="col-left">
+          <div class="mugshot-frame" id="mugshot">
+            ${avatarHtml}
+            <canvas id="jail-canvas"></canvas>
+            <div class="verdict">Guilty</div>
+          </div>
         </div>
-        <div class="handle">@${escapeHtml(config.user)}</div>
-        ${reasonHtml}
-        <div class="verdict">Guilty</div>
+        <div class="col-right">
+          <div class="title">Go To Jail</div>
+          <div class="handle">@${escapeHtml(config.user)}</div>
+          ${reasonHtml}
+        </div>
       `;
 
-      // Start canvas animation
-      const canvas = document.getElementById('jail-canvas');
-      if (canvas) {
-        animateJailBars(canvas);
+        // Start canvas animation
+        const canvas = document.getElementById("jail-canvas");
+        if (canvas) {
+          animateJailBars(canvas);
+        }
       }
-    }
 
-    // Slam keyframe (added dynamically to avoid polluting CSS for no-JS)
-    const style = document.createElement('style');
-    style.textContent = `
+      // Slam keyframe (added dynamically to avoid polluting CSS for no-JS)
+      const style = document.createElement("style");
+      style.textContent = `
       @keyframes slam {
         0% { transform: translateY(-3px); }
         50% { transform: translateY(2px); }
         100% { transform: translateY(0); }
       }
     `;
-    document.head.appendChild(style);
+      document.head.appendChild(style);
 
-    render();
-  </script>
-</body>
+      render();
+    </script>
+  </body>
 </html>
