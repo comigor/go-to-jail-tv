@@ -19,6 +19,7 @@
         --color-primary: #ffffff;
         --color-accent: #ff3131;
         --color-bg: #0a0a0a;
+        --color-news-red: #cc0000;
         --font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       }
@@ -126,8 +127,8 @@
         align-content: center;
         align-items: stretch;
         width: 100%;
-        height: 100vh;
-        padding: 5vh 5vw;
+        height: calc(100vh - 5vh); /* reserve space for ticker */
+        padding: 3vh 5vw 2vh;
         z-index: 1;
         box-sizing: border-box;
       }
@@ -140,18 +141,44 @@
       .col-right {
         display: flex;
         flex-direction: column;
-        gap: 3vh;
+        gap: 1.5vh;
         padding-left: 3vw;
         padding-right: 2vw;
+        overflow: hidden;
+      }
+
+      /* ── BREAKING NEWS header ── */
+      .breaking-news-banner {
+        background: var(--color-news-red);
+        color: #fff;
+        font-size: clamp(0.7rem, 1.4vw, 1.5rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        padding: 0.6vh 1.5vw;
+        display: inline-block;
+        line-height: 1;
+        animation: banner-flash 1.5s ease-in-out infinite;
+      }
+
+      @keyframes banner-flash {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.75;
+        }
       }
 
       .title {
-        font-size: 5vw;
+        font-size: clamp(2rem, 5vw, 6rem);
         font-weight: 900;
         color: var(--color-accent);
         text-transform: uppercase;
         letter-spacing: 0.15em;
         line-height: 1;
+        margin-top: 1.2vh;
         text-shadow:
           0 0 20px rgba(255, 49, 49, 0.5),
           0 0 40px rgba(255, 49, 49, 0.3);
@@ -168,10 +195,148 @@
         }
       }
 
+      /* ── LIVE badge ── */
+      .live-badge {
+        position: fixed;
+        top: 3vh;
+        right: 3vw;
+        display: flex;
+        align-items: center;
+        gap: 0.6vw;
+        z-index: 102;
+        font-family: var(--font-family);
+      }
+
+      .live-dot {
+        width: 14px;
+        height: 14px;
+        background: #ff0000;
+        border-radius: 50%;
+        animation: live-pulse 1.2s ease-in-out infinite;
+        box-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+      }
+
+      @keyframes live-pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.3;
+          transform: scale(0.8);
+        }
+      }
+
+      .live-text {
+        font-size: 1.5vw;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 0.15em;
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+      }
+
+      /* ── News ticker ── */
+      .news-ticker {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 5vh;
+        background: var(--color-news-red);
+        z-index: 101;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+      }
+
+      .news-ticker-content {
+        display: inline-block;
+        white-space: nowrap;
+        font-size: 2vh;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0.03em;
+        animation: ticker-scroll 28s linear infinite;
+        padding-left: 100%;
+      }
+
+      @keyframes ticker-scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      /* ── Siren bars ── */
+      .siren-bar {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        z-index: 101;
+        pointer-events: none;
+      }
+
+      .siren-bar--top {
+        top: 0;
+      }
+      .siren-bar--bottom {
+        bottom: 5vh;
+      }
+
+      .siren-bar::before,
+      .siren-bar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 50%;
+        height: 100%;
+      }
+
+      .siren-bar::before {
+        left: 0;
+        animation: siren-left 1.4s ease-in-out infinite;
+      }
+
+      .siren-bar::after {
+        right: 0;
+        animation: siren-right 1.4s ease-in-out infinite;
+      }
+
+      @keyframes siren-left {
+        0%,
+        100% {
+          background: #ff0000;
+        }
+        50% {
+          background: #0044ff;
+        }
+      }
+
+      @keyframes siren-right {
+        0%,
+        100% {
+          background: #0044ff;
+        }
+        50% {
+          background: #ff0000;
+        }
+      }
+
+      /* ── Booking number ── */
+      .booking-number {
+        font-family: "Courier New", Courier, monospace;
+        font-size: clamp(0.7rem, 1.4vw, 1.5rem);
+        color: #888;
+        letter-spacing: 0.1em;
+      }
+
       .mugshot-frame {
         position: relative;
-        height: 75vh;
-        max-width: 44vw;
+        height: min(70vh, 44vw);
         aspect-ratio: 1;
         border: 4px solid #333;
         background: #1a1a1a;
@@ -208,16 +373,20 @@
       }
 
       .handle {
-        font-size: 3vw;
+        font-size: clamp(1.2rem, 3vw, 3.5rem);
         font-weight: 700;
         color: var(--color-primary);
       }
 
       .reason {
-        font-size: 5vw;
+        font-size: clamp(1.5rem, 4vw, 5rem);
         color: #ccc;
         line-height: 1.2;
         margin-top: auto;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
       }
 
       .reason::before {
@@ -233,7 +402,8 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        font-size: 2.5vw;
+        font-family: "Courier New", Courier, monospace;
+        font-size: clamp(1rem, 2.5vw, 3rem);
         font-weight: 900;
         color: #fff;
         text-transform: uppercase;
@@ -304,10 +474,31 @@
         .verdict {
           font-size: 6vw;
         }
+
+        .booking-number {
+          font-size: 3vw;
+        }
+
+        .live-text {
+          font-size: 3vw;
+        }
+
+        .breaking-news-banner {
+          font-size: 2.5vw;
+        }
       }
     </style>
   </head>
   <body>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span class="live-text">LIVE</span>
+    </div>
+    <div class="siren-bar siren-bar--top"></div>
+    <div class="siren-bar siren-bar--bottom"></div>
+    <div class="news-ticker" id="news-ticker">
+      <span class="news-ticker-content" id="ticker-text"></span>
+    </div>
     <div class="container" id="app"></div>
     <div class="spotlight spotlight--red"></div>
     <div class="spotlight spotlight--blue"></div>
@@ -319,6 +510,9 @@
         user: params.get("user"),
         message: params.get("message"),
         avatar: params.get("avatar"),
+        duration: params.get("duration")
+          ? parseInt(params.get("duration"), 10)
+          : null,
       };
 
       function showError() {
@@ -478,6 +672,48 @@
         runAnimation();
       }
 
+      // ── Booking number from date + username hash ──
+      function generateBookingNumber(username) {
+        let hash = 0;
+        for (let i = 0; i < username.length; i++) {
+          hash = ((hash << 5) - hash + username.charCodeAt(i)) | 0;
+        }
+        const num = Math.abs(hash) % 10000;
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, "0");
+        const dd = String(now.getDate()).padStart(2, "0");
+        return `CASE #${yyyy}-${mm}-${dd}-${String(num).padStart(4, "0")}`;
+      }
+
+      // ── Countdown formatter ──
+      function formatCountdown(ms) {
+        if (ms <= 0) return null;
+        const totalSec = Math.ceil(ms / 1000);
+        const h = Math.floor(totalSec / 3600);
+        const m = Math.floor((totalSec % 3600) / 60);
+        const s = totalSec % 60;
+        if (h > 0)
+          return `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
+        return `${m}m ${String(s).padStart(2, "0")}s`;
+      }
+
+      // ── Ticker text generator ──
+      function generateTickerText(user, message) {
+        const u = escapeHtml(user);
+        const msg = message ? escapeHtml(message) : "unspecified crimes";
+        return [
+          `🚨 BREAKING: @${u} apprehended for "${msg}" — authorities describe it as "the worst we've ever seen"`,
+          `🚨 Office security has been notified`,
+          `🚨 Colleagues urged to review their own code immediately`,
+          `🚨 @${u}'s keyboard has been confiscated as evidence`,
+          `🚨 HR confirms this is not a drill`,
+          `🚨 Witnesses report @${u} showed "zero remorse"`,
+        ].join("    ·    ");
+      }
+
+      let countdownInterval = null;
+
       function render() {
         if (!config.user) {
           showError();
@@ -505,20 +741,59 @@
           reasonHtml = `<div class="reason">${escapeHtml(config.message)}</div>`;
         }
 
+        // Verdict: countdown or static
+        const hasDuration = config.duration && config.duration > 0;
+        const verdictId = hasDuration ? 'id="verdict-countdown"' : "";
+        const verdictText = hasDuration ? "Sentenced: ..." : "Guilty";
+
+        // Booking number
+        const bookingNum = generateBookingNumber(config.user);
+
         app.innerHTML = `
         <div class="col-left">
           <div class="mugshot-frame" id="mugshot">
             ${avatarHtml}
             <canvas id="jail-canvas"></canvas>
-            <div class="verdict">Guilty</div>
+            <div class="verdict" ${verdictId}>${verdictText}</div>
           </div>
         </div>
         <div class="col-right">
+          <div class="breaking-news-banner">▌ Breaking News</div>
           <div class="title">Go To Jail</div>
           <div class="handle">@${escapeHtml(config.user)}</div>
+          <div class="booking-number">${bookingNum}</div>
           ${reasonHtml}
         </div>
       `;
+
+        // Populate ticker
+        const tickerEl = document.getElementById("ticker-text");
+        if (tickerEl) {
+          tickerEl.textContent = generateTickerText(
+            config.user,
+            config.message,
+          );
+        }
+
+        // Start countdown if duration present
+        if (hasDuration) {
+          const startTime = Date.now();
+          const endTime = startTime + config.duration;
+          const verdictEl = document.getElementById("verdict-countdown");
+
+          function tick() {
+            const remaining = endTime - Date.now();
+            if (remaining <= 0) {
+              verdictEl.textContent = "Time Served";
+              clearInterval(countdownInterval);
+              return;
+            }
+            verdictEl.textContent = "Sentenced: " + formatCountdown(remaining);
+          }
+
+          tick();
+          countdownInterval = setInterval(tick, 500);
+        }
 
         // Start canvas animation
         const canvas = document.getElementById("jail-canvas");
