@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MERGE FREEZE</title>
+    <meta property="og:title" content="MERGE FREEZE" />
+    <meta property="og:type" content="website" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --color-primary: #ffffff;
+        --color-accent: #00bcd4;
+        --color-bg: #0a0a1a;
+        --color-freeze-blue: #0277bd;
+        --font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background-color: var(--color-bg);
+        color: var(--color-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      /* Vignette — red danger tint */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(255, 0, 0, 0.12) 0%,
+          transparent 40%,
+          rgba(0, 0, 0, 0.6) 100%
+        );
+      }
+
+      /* Rotating icy spotlights */
+      .spotlight {
+        position: fixed;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.35;
+        pointer-events: none;
+        z-index: 99;
+      }
+
+      .spotlight--cyan {
+        background: #00bcd4;
+        animation: sweep-cyan 6s ease-in-out infinite;
+      }
+
+      .spotlight--lightblue {
+        background: #4fc3f7;
+        animation: sweep-lightblue 6s ease-in-out infinite;
+      }
+
+      @keyframes sweep-cyan {
+        0% {
+          top: -10%;
+          left: -10%;
+        }
+        25% {
+          top: -10%;
+          left: 80%;
+        }
+        50% {
+          top: 70%;
+          left: 80%;
+        }
+        75% {
+          top: 70%;
+          left: -10%;
+        }
+        100% {
+          top: -10%;
+          left: -10%;
+        }
+      }
+
+      @keyframes sweep-lightblue {
+        0% {
+          top: 70%;
+          left: 80%;
+        }
+        25% {
+          top: 70%;
+          left: -10%;
+        }
+        50% {
+          top: -10%;
+          left: -10%;
+        }
+        75% {
+          top: -10%;
+          left: 80%;
+        }
+        100% {
+          top: 70%;
+          left: 80%;
+        }
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-content: center;
+        align-items: stretch;
+        width: 100%;
+        height: calc(100vh - 5vh); /* reserve space for ticker */
+        padding: 3vh 5vw 2vh;
+        z-index: 1;
+        box-sizing: border-box;
+      }
+
+      .col-left {
+        display: flex;
+        justify-content: center;
+      }
+
+      .col-right {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5vh;
+        padding-left: 3vw;
+        padding-right: 2vw;
+        overflow: hidden;
+      }
+
+      /* ── MERGE FREEZE header ── */
+      .breaking-news-banner {
+        background: var(--color-freeze-blue);
+        color: #fff;
+        font-size: clamp(0.7rem, 1.4vw, 1.5rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        padding: 0.6vh 1.5vw;
+        display: inline-block;
+        line-height: 1;
+        animation: banner-flash 1.5s ease-in-out infinite;
+      }
+
+      @keyframes banner-flash {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.75;
+        }
+      }
+
+      .title {
+        font-size: clamp(2rem, 5vw, 6rem);
+        font-weight: 900;
+        color: var(--color-accent);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        line-height: 1;
+        margin-top: 1.2vh;
+        text-shadow:
+          0 0 20px rgba(0, 188, 212, 0.5),
+          0 0 40px rgba(0, 188, 212, 0.3);
+        animation: title-pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes title-pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      /* ── LIVE badge ── */
+      .live-badge {
+        position: fixed;
+        top: 3vh;
+        right: 3vw;
+        display: flex;
+        align-items: center;
+        gap: 0.6vw;
+        z-index: 102;
+        font-family: var(--font-family);
+      }
+
+      .live-dot {
+        width: 14px;
+        height: 14px;
+        background: #00bcd4;
+        border-radius: 50%;
+        animation: live-pulse 1.2s ease-in-out infinite;
+        box-shadow: 0 0 8px rgba(0, 188, 212, 0.8);
+      }
+
+      @keyframes live-pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.3;
+          transform: scale(0.8);
+        }
+      }
+
+      .live-text {
+        font-size: 1.5vw;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 0.15em;
+        text-shadow: 0 0 10px rgba(0, 188, 212, 0.6);
+      }
+
+      /* ── News ticker ── */
+      .news-ticker {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 5vh;
+        background: var(--color-freeze-blue);
+        z-index: 101;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+      }
+
+      .news-ticker-content {
+        display: inline-block;
+        white-space: nowrap;
+        font-size: 2vh;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0.03em;
+        animation: ticker-scroll 28s linear infinite;
+        padding-left: 100%;
+      }
+
+      @keyframes ticker-scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      /* ── Caution bars (yellow/black) ── */
+      .caution-bar {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        z-index: 101;
+        pointer-events: none;
+      }
+
+      .caution-bar--top {
+        top: 0;
+      }
+      .caution-bar--bottom {
+        bottom: 5vh;
+      }
+
+      .caution-bar::before,
+      .caution-bar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 50%;
+        height: 100%;
+      }
+
+      .caution-bar::before {
+        left: 0;
+        animation: caution-left 1.4s ease-in-out infinite;
+      }
+
+      .caution-bar::after {
+        right: 0;
+        animation: caution-right 1.4s ease-in-out infinite;
+      }
+
+      @keyframes caution-left {
+        0%,
+        100% {
+          background: #ffd700;
+        }
+        50% {
+          background: #1a1a1a;
+        }
+      }
+
+      @keyframes caution-right {
+        0%,
+        100% {
+          background: #1a1a1a;
+        }
+        50% {
+          background: #ffd700;
+        }
+      }
+
+      /* ── Freeze order number ── */
+      .freeze-order-number {
+        font-family: "Courier New", Courier, monospace;
+        font-size: clamp(0.7rem, 1.4vw, 1.5rem);
+        color: #888;
+        letter-spacing: 0.1em;
+      }
+
+      .mugshot-frame {
+        position: relative;
+        height: min(70vh, 44vw);
+        aspect-ratio: 1;
+        border: 4px solid #333;
+        background: #1a1a1a;
+        box-shadow:
+          0 0 30px rgba(0, 0, 0, 0.8),
+          inset 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .mugshot-frame .octocat {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #222;
+        filter: brightness(1.1) saturate(0.6) sepia(0.3) hue-rotate(170deg);
+      }
+
+      .mugshot-frame .octocat svg {
+        width: 70%;
+        height: 70%;
+      }
+
+      .mugshot-frame canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+      }
+
+      .handle {
+        font-size: clamp(1.2rem, 3vw, 3.5rem);
+        font-weight: 700;
+        color: var(--color-primary);
+      }
+
+      .reason {
+        font-size: clamp(1.5rem, 4vw, 5rem);
+        color: #ccc;
+        line-height: 1.2;
+        margin-top: auto;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+      }
+
+      .reason::before {
+        content: "\201C";
+      }
+
+      .reason::after {
+        content: "\201D";
+      }
+
+      .verdict {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        font-family: "Courier New", Courier, monospace;
+        font-size: clamp(1rem, 2.5vw, 3rem);
+        font-weight: 900;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        text-align: center;
+        padding: 1.5vh 0;
+        background: var(--color-accent);
+        z-index: 3;
+      }
+
+      .error-state {
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .error-state h1 {
+        color: var(--color-accent);
+        margin-bottom: 1rem;
+      }
+
+      .error-state p {
+        color: #888;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .error-state code {
+        background: #1a1a1a;
+        padding: 0.2em 0.5em;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        color: #ccc;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+          height: auto;
+          min-height: 100vh;
+          padding: 3vh 5vw;
+        }
+
+        .col-right {
+          align-items: center;
+          text-align: center;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        .mugshot-frame {
+          height: auto;
+          width: 70vw;
+        }
+
+        .title {
+          font-size: 10vw;
+        }
+
+        .handle {
+          font-size: 6vw;
+        }
+
+        .reason {
+          font-size: 8vw;
+        }
+
+        .verdict {
+          font-size: 6vw;
+        }
+
+        .freeze-order-number {
+          font-size: 3vw;
+        }
+
+        .live-text {
+          font-size: 3vw;
+        }
+
+        .breaking-news-banner {
+          font-size: 2.5vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span class="live-text">LIVE</span>
+    </div>
+    <div class="caution-bar caution-bar--top"></div>
+    <div class="caution-bar caution-bar--bottom"></div>
+    <div class="news-ticker" id="news-ticker">
+      <span class="news-ticker-content" id="ticker-text"></span>
+    </div>
+    <div class="container" id="app"></div>
+    <div class="spotlight spotlight--cyan"></div>
+    <div class="spotlight spotlight--lightblue"></div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+
+      const config = {
+        customer: "#ALL-DECADE",
+        message: params.get("message"),
+        duration: params.get("duration")
+          ? parseInt(params.get("duration"), 10)
+          : null,
+      };
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // ── Frost bars canvas animation ──────────────────────────────
+      function animateFrostBars(canvas) {
+        const SIZE = 600; // draw at 2x for retina sharpness
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+        const ctx = canvas.getContext("2d");
+
+        const BAR_COUNT = 7;
+        const BAR_WIDTH = 14;
+        const CROSSBAR_H = 10;
+        const DURATION = 1200; // ms for the gate to close
+        const DELAY = 400; // ms before animation starts
+        const SHADOW_BLUR = 6;
+
+        // Spacing: bars evenly distributed across the width
+        const gap = SIZE / (BAR_COUNT + 1);
+
+        function drawBar(x, y, w, h) {
+          // Ice blue steel base
+          const grad = ctx.createLinearGradient(x, y, x + w, y);
+          grad.addColorStop(0, "#1a3a5c");
+          grad.addColorStop(0.2, "#4a7a9c");
+          grad.addColorStop(0.45, "#6aaec8");
+          grad.addColorStop(0.55, "#7ec8e3");
+          grad.addColorStop(0.8, "#4a7a9c");
+          grad.addColorStop(1, "#1a3a5c");
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, y, w, h);
+
+          // Specular highlight
+          ctx.fillStyle = "rgba(180, 230, 255, 0.2)";
+          ctx.fillRect(x + w * 0.35, y, w * 0.15, h);
+        }
+
+        function drawCrossbar(y, h) {
+          const grad = ctx.createLinearGradient(0, y, 0, y + h);
+          grad.addColorStop(0, "#2a5a7c");
+          grad.addColorStop(0.3, "#6aaec8");
+          grad.addColorStop(0.5, "#7ec8e3");
+          grad.addColorStop(0.7, "#6aaec8");
+          grad.addColorStop(1, "#2a5a7c");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, y, SIZE, h);
+
+          // Specular
+          ctx.fillStyle = "rgba(180, 230, 255, 0.15)";
+          ctx.fillRect(0, y + h * 0.25, SIZE, h * 0.15);
+        }
+
+        function drawRivets(y) {
+          for (let i = 1; i <= BAR_COUNT; i++) {
+            const cx = gap * i;
+            const r = 4;
+
+            // Rivet body
+            const rGrad = ctx.createRadialGradient(cx - 1, y - 1, 0, cx, y, r);
+            rGrad.addColorStop(0, "#aaddee");
+            rGrad.addColorStop(1, "#2a5a7c");
+            ctx.beginPath();
+            ctx.arc(cx, y, r, 0, Math.PI * 2);
+            ctx.fillStyle = rGrad;
+            ctx.fill();
+          }
+        }
+
+        function draw(progress) {
+          ctx.clearRect(0, 0, SIZE, SIZE);
+
+          // The bars slide down from above: offset goes from -SIZE to 0
+          const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+          const offset = -SIZE * (1 - ease);
+
+          ctx.save();
+          ctx.translate(0, offset);
+
+          // Drop shadow behind the whole gate
+          ctx.shadowColor = "rgba(0, 100, 180, 0.4)";
+          ctx.shadowBlur = SHADOW_BLUR;
+          ctx.shadowOffsetX = 2;
+          ctx.shadowOffsetY = 2;
+
+          // Vertical bars
+          for (let i = 1; i <= BAR_COUNT; i++) {
+            const x = gap * i - BAR_WIDTH / 2;
+            drawBar(x, 0, BAR_WIDTH, SIZE);
+          }
+
+          // Turn off shadow for crossbars (they overlap bars)
+          ctx.shadowColor = "transparent";
+
+          // Top crossbar
+          drawCrossbar(12, CROSSBAR_H);
+          // Bottom crossbar
+          drawCrossbar(SIZE - 12 - CROSSBAR_H, CROSSBAR_H);
+          // Middle crossbar
+          drawCrossbar(SIZE / 2 - CROSSBAR_H / 2, CROSSBAR_H);
+
+          // Rivets at crossbar intersections
+          drawRivets(12 + CROSSBAR_H / 2);
+          drawRivets(SIZE - 12 - CROSSBAR_H / 2);
+          drawRivets(SIZE / 2);
+
+          ctx.restore();
+        }
+
+        // Animation loop
+        const REPEAT_INTERVAL = 30000; // replay every 30s
+
+        function runAnimation() {
+          let start = null;
+          canvas.style.animation = "";
+          ctx.clearRect(0, 0, SIZE, SIZE);
+
+          function frame(ts) {
+            if (!start) start = ts;
+            const elapsed = ts - start;
+
+            if (elapsed < DELAY) {
+              requestAnimationFrame(frame);
+              return;
+            }
+
+            const t = Math.min((elapsed - DELAY) / DURATION, 1);
+            draw(t);
+
+            if (t < 1) {
+              requestAnimationFrame(frame);
+            } else {
+              canvas.style.animation = "slam 0.15s ease-out";
+              setTimeout(runAnimation, REPEAT_INTERVAL);
+            }
+          }
+
+          requestAnimationFrame(frame);
+        }
+
+        runAnimation();
+      }
+
+      // ── Freeze order number from date + customer hash ──
+      function generateFreezeOrderNumber(customer) {
+        let hash = 0;
+        for (let i = 0; i < customer.length; i++) {
+          hash = ((hash << 5) - hash + customer.charCodeAt(i)) | 0;
+        }
+        const num = Math.abs(hash) % 10000;
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, "0");
+        const dd = String(now.getDate()).padStart(2, "0");
+        return `FREEZE ORDER #${yyyy}-${mm}-${dd}-${String(num).padStart(4, "0")}`;
+      }
+
+      // ── Countdown formatter ──
+      function formatCountdown(ms) {
+        if (ms <= 0) return null;
+        const totalSec = Math.ceil(ms / 1000);
+        const h = Math.floor(totalSec / 3600);
+        const m = Math.floor((totalSec % 3600) / 60);
+        const s = totalSec % 60;
+        if (h > 0)
+          return `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
+        return `${m}m ${String(s).padStart(2, "0")}s`;
+      }
+
+      // ── Ticker text generator ──
+      function generateTickerText() {
+        return [
+          `\u{1F9CA} ALERT: Merge freeze in effect \u2014 customer visiting the office`,
+          `\u{1F9CA} Engineering team: DO NOT merge to main until further notice`,
+          `\u{1F9CA} Octocat has been placed in protective custody`,
+          `\u{1F9CA} All pull requests are in a holding pattern \u2014 review only`,
+          `\u{1F9CA} This is not a drill \u2014 customer in the building`,
+          `\u{1F9CA} Customer visit requires code stability \u2014 no deployments`,
+        ].join("    \u00B7    ");
+      }
+
+      // ── Inline Octocat SVG (GitHub mark) ──
+      function getOctocatSvg() {
+        return `<svg viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>`;
+      }
+
+      let countdownInterval = null;
+
+      function render() {
+        const app = document.getElementById("app");
+
+        // Dynamic OG tags
+        document.title = `${config.customer} \u2014 MERGE FREEZE`;
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle)
+          ogTitle.content = `MERGE FREEZE \u2014 ${config.customer} visiting`;
+
+        const octocatHtml = `<div class="octocat">${getOctocatSvg()}</div>`;
+
+        let reasonHtml = "";
+        if (config.message) {
+          reasonHtml = `<div class="reason">${escapeHtml(config.message)}</div>`;
+        }
+
+        // Verdict: countdown, static, or lifted
+        const hasDuration = config.duration && config.duration > 0;
+        const verdictId = hasDuration ? 'id="verdict-countdown"' : "";
+        const verdictText = hasDuration ? "Freeze ends in: ..." : "Frozen";
+
+        // Freeze order number
+        const freezeOrderNum = generateFreezeOrderNumber(config.customer);
+
+        app.innerHTML = `
+        <div class="col-left">
+          <div class="mugshot-frame" id="mugshot">
+            ${octocatHtml}
+            <canvas id="frost-canvas"></canvas>
+            <div class="verdict" ${verdictId}>${verdictText}</div>
+          </div>
+        </div>
+        <div class="col-right">
+          <div class="breaking-news-banner">\u258C MERGE FREEZE</div>
+          <div class="title">Do Not Merge</div>
+          <div class="handle">@${escapeHtml(config.customer)}</div>
+          <div class="freeze-order-number">${freezeOrderNum}</div>
+          ${reasonHtml}
+        </div>
+      `;
+
+        // Populate ticker
+        const tickerEl = document.getElementById("ticker-text");
+        if (tickerEl) {
+          tickerEl.textContent = generateTickerText();
+        }
+
+        // Start countdown if duration present
+        if (hasDuration) {
+          const startTime = Date.now();
+          const endTime = startTime + config.duration;
+          const verdictEl = document.getElementById("verdict-countdown");
+
+          function tick() {
+            const remaining = endTime - Date.now();
+            if (remaining <= 0) {
+              verdictEl.textContent = "Freeze Lifted";
+              clearInterval(countdownInterval);
+              return;
+            }
+            verdictEl.textContent =
+              "Freeze ends in: " + formatCountdown(remaining);
+          }
+
+          tick();
+          countdownInterval = setInterval(tick, 500);
+        }
+
+        // Start canvas animation
+        const canvas = document.getElementById("frost-canvas");
+        if (canvas) {
+          animateFrostBars(canvas);
+        }
+      }
+
+      // Slam keyframe (added dynamically to avoid polluting CSS for no-JS)
+      const style = document.createElement("style");
+      style.textContent = `
+      @keyframes slam {
+        0% { transform: translateY(-3px); }
+        50% { transform: translateY(2px); }
+        100% { transform: translateY(0); }
+      }
+    `;
+      document.head.appendChild(style);
+
+      render();
+    </script>
+  </body>
+</html>
